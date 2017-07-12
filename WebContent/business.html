@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script
+  src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+  integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g="
+  crossorigin="anonymous"></script>
+<title>Insert title here</title>
+</head>
+<body>
+<h1>Value</h1>
+<ul>
+	<li>What will my data be used for?</li>
+	<li>What are the benefits and who will benefit?</li>
+	<li>Who will be using my data?</li>
+</ul>
+<h1>Protections</h1>
+<ul>
+	<li>Is my data secure?</li>
+	<li>Will my data be anonymous?</li>
+	<li>Can I see and correct data about me?</li>
+	<li>Could my data be sold?</li>
+</ul>
+<h1>Choice</h1>
+<ul>
+	<li>Will I be asked for consent?</li>
+</ul>
+	
+	
+<div id="WhatWillDataBeUsedForGuideline" class="guideline">
+People expect to be clearly informed about the purpose of collecting data in specific and detailed terms.  In general, people tend to be more comfortable when data is used in context, as a necessary part of delivering a product or service.  
+Guidelines 
+
+The information on purpose needs to include:
+<ul>
+<li>a clearly identified, specific purpose for the data </li>
+<li>a list of the data being collected </li>
+<li>a description of any algorithms used</li>
+<li>disclosure of possible future purposes.</li>
+</ul>
+Purpose
+Clearly explain the use and purpose of the collection of data, for example -   
+We only collect data that are necessary to deliver the service we offer, and no more.
+We will make your medical records accessible online to specialists and hospitals. This will provide access to your medical history if you need treatment, including in an emergency.  
+We use your information to target marketing to you.  We also share it with the companies in our loyalty programme and they use it to target marketing material to you by email.  
+We provide your information to charities so that they can approach you for support.
+Provide further detail, together with concrete examples, for those interested.  Examples might include ways you have used research to improve services in the past.
+If you can, provide the more detailed information as a click or drill-down option so that it can be skipped by people who are only interested in more general statements about purpose.
+Data being collected
+List what data you are collecting in these 3 categories:
+	1.	Data you are requiring as a condition of supplying the service or product.  
+2.	Information beyond what is strictly needed for service delivery, but authorised under legislation.  
+
+
+3.	Information beyond that needed for service delivery or authorised under legislation (eg for marketing or research).	In most cases this should only be the data that is strictly necessary for the service.
+
+Describe the purposes for collecting this additional data and state the authorisation clearly.
+Be explicit about any consequences of not providing this additional information.  
+Describe the purpose.
+Be explicit about any incentives you are offering in exchange for gaining the right to use customer/client information.  	 
+Where the data is sensitive, or some client groups are likely to have a low level of trust in your organisation, explain why it isn’t possible to achieve the purpose in any other way eg by using anonymous instead of personally-identified data. 
+Algorithms
+If you use algorithms (formula-based  decision tools) eg to determine whether to grant loans, what interest rate to charge, or as part of a recruitment process:
+•	inform your customers/applicants of how this works and which pieces of data are used
+•	advise clients of other inputs to your decision processes (eg does a staff member review applications?)  
+•	offer the applicant the right to contest the decision, including the data that was used in the algorithm.
+Future Uses
+Explicitly address whether the data may be used for other purposes in the future and if so what.
+If it isn’t possible to be precise about possible future uses, provide an assurance that the person will be asked to give consent to that use before it occurs.  
+
+</div>	
+	
+<textarea id="question1"></textarea>
+<script>
+localStorage.setItem('myCat', 'Tom');
+
+$("#question1").on('change keyup paste', function() {
+    console.log('text area change happening');
+    localStorage.setItem('myCat', $("#question1").val());
+	// your code here
+});
+
+</script>
+</body>
+</html>

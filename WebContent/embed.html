@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<script src="media/dataFutures.js"></script>
+<title>Example embedded data usage wheel</title>
+<style>
+div.wheel ul.wheel li {
+	width:100px;
+	list-style: none;
+	position: absolute;
+	transform-origin: bottom center;
+	border: 1px yellow dashed;
+	height: 175px;
+	left: 150px;
+	cursor: pointer;
+}
+div.wheel ul.wheel li:nth-child(1) {
+	transform: rotate(45deg);
+	border-spacing: 45px;	
+}
+div.wheel ul.wheel li:nth-child(2) {
+	transform: rotate(90deg);	
+	border-spacing: 90px;	
+}
+div.wheel ul.wheel li:nth-child(3) {
+	transform: rotate(135deg);	
+	border-spacing: 135px;	
+}
+div.wheel ul.wheel li:nth-child(4) {
+	transform: rotate(180deg);	
+	border-spacing: 180px;	
+}
+div.wheel ul.wheel li:nth-child(5) {
+	transform: rotate(225deg);	
+	border-spacing: 225px;	
+}
+div.wheel ul.wheel li:nth-child(6) {
+	transform: rotate(270deg);	
+	border-spacing: 270px;	
+}
+div.wheel ul.wheel li:nth-child(7) {
+	transform: rotate(315deg);	
+	border-spacing: 315px;	
+}
+div.wheel ul.wheel li:nth-child(8) {
+	transform: rotate(0deg);	
+	border-spacing: 0px;	
+}
+div.wheel div.center {
+	position: absolute;
+	left: 180px;
+	top: 160px;
+	width: 50px;
+}
+
+</style>
+</head>
+<body>
+<h1>Proof of concept only</h1>
+<p>A business will embed this script into their website, and the wheel will render with their saved data</p>
+<p>This is a test of the mechanism only, no styling has yet been applied. Box renders at fixed 700px wide. Click on one of the eight questions to see the responses (in this instance Lorem Ipsum)</p>
+
+<div id="dataFutures" data-embed="N4Ighgdgzg7gpgJyiAXAbVJWjUgCJgAuYABAJZQkCuUcAJiYQPYkC2YA1nNZaQDZNCJJgDMSABwSiyhEABoQrJgjgBJCCKa4AFoULiUAekMxTAOijEIdMAjpQzAYyZmIALxABfOZmjwEuAAq2twARnAQcCIylMwkAJ5MVCS23ITaRCTwWWR8fGyc3AKElKJsTJHx8orKahpaKCC6+kYm5paQNnYOzq4e3r7YAY0A6twwufnhPGQQAOYJSQgkNsTVSirqmjp6BsamMBZWXfZOLu5eALqeQA==">
+
+</div>
+
+
+<div style="width:700px; border:1px solid grey; position:relative" id="dataFuturesEmbed">
+
+	<div id="dataFuturesGuidelinesAnswers" class="guideline" style="width: 300px; padding-left:20px; margin-left: 20px; float:right;border:1px solid green">
+	guidelines box
+	</div>
+
+	<div class="wheel" style="width: 375px;border:1px solid red; height: 400px;">
+	<ul class="wheel">
+	<li data-data-futures-question='0'>What will my data be used for?</li>
+	<li data-data-futures-question='1'>What are the benefits and who will benefit?</li>
+	<li data-data-futures-question='2'>Who will be using my data?</li>
+	<li data-data-futures-question='3'>Is my data secure?</li>
+	<li data-data-futures-question='4'>Will my data be anonymous?</li>
+	<li data-data-futures-question='5'>Can I see and correct data about me?</li>
+	<li data-data-futures-question='6'>Could my data be sold?</li>
+	<li data-data-futures-question='7'>Will I be asked for consent?</li>
+	</ul>
+	<div class="center">Your Data Your Way</div>
+	</div>
+
+</div>
+
+</body>
+</html>
