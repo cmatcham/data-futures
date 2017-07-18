@@ -369,7 +369,21 @@ function rotate(desiredRotation) {
 		showSelectedText();
 		return;
 	}
-	rotation += 5;
+	
+	desiredRotation = desiredRotation % 360;
+	rotation = rotation % 360;
+	if (desiredRotation > rotation) {
+		rotation = rotation + 360;
+	}
+	
+	if (rotation - desiredRotation > (desiredRotation + 360 - rotation)) {
+		rotation += 5;
+	} else {	
+		rotation -= 5;
+		if (rotation == 0) {
+			rotation = 360;
+		}
+	}
 	ctx.fillStyle = '#ffffff';
 	ctx.clearRect(0,0,350,350);
     	  
