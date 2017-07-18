@@ -135,7 +135,6 @@ function toRadians(deg) {
 
 function drawSlice(ctx, colour, startDegrees, endDegrees, radius) {
 	var midpoint = startDegrees + ((endDegrees - startDegrees) / 2);
-	console.log(midpoint);
 	
 	var xOffset = Math.cos(toRadians(midpoint));
 	var yOffset = Math.sin(toRadians(midpoint));
@@ -168,7 +167,6 @@ function arcPath(ctx, startDegrees, endDegrees, radius) {
 
 function drawInnerSlice(ctx, colour, startDegrees, endDegrees, radius) {
 	var midpoint = startDegrees + ((endDegrees - startDegrees) / 2);
-	console.log(midpoint);
 	
 	var xOffset = Math.cos(toRadians(midpoint));
 	var yOffset = Math.sin(toRadians(midpoint));
@@ -185,23 +183,32 @@ function drawInnerSlice(ctx, colour, startDegrees, endDegrees, radius) {
 }
    
    
+var slices = [
+	{'start':180,'end':225,'color':'#9352a0', 'text':'Could my data be sold?', 'src':'images/Icons-03.png'},
+	{'start':225,'end':270,'color':'#9352a0', 'text':'Will I be asked for consent?', 'src':'images/Icons-05.png'},
+	{'start':270,'end':315,'color':'#F78F33', 'text':'What will my data be used for?', 'src':'images/Icons-08.png'},
+	{'start':315,'end':360,'color':'#F78F33', 'text':'What are the benefits and who will benefit?', 'src':'images/Icons-10.png'},
+	{'start':0,  'end':45, 'color':'#F78F33', 'text':'Who will be using my data?', 'src':'images/Icons-09.png'},
+	{'start':45, 'end':90, 'color':'#5085a0', 'text':'Is my data secure?', 'src':'images/Icons-07.png'},
+	{'start':90, 'end':135,'color':'#5085a0', 'text':'Will my data be anonymous?', 'src':'images/Icons-06.png'},
+	{'start':135,'end':180,'color':'#5085a0', 'text':'Can I see and correct data about me?', 'src':'images/Icons-04.png'}
+		
+];
+
+slices.forEach(function(slice) {
+	slice.img = new Image();
+	slice.img.src = slice.src;
+});
+
      
      function drawSlices(ctx, rotation) {
 		 
-    	drawSlice(ctx, '#9352a0', 180 + rotation, 225 + rotation, 165);
-    	drawSlice(ctx, '#9352a0', 225 + rotation, 270 + rotation, 165);
+		slices.forEach(function(slice) {
+			drawSlice(ctx, slice.color, slice.start + rotation, slice.end + rotation, 165);
+			drawText(canvas, (rotation + slice.start + 22.5) % 360, slice.text);
+			drawImage(ctx, rotation + slice.start + 22.5, slice.img);
+		});
 
-    	drawSlice(ctx, '#F78F33', 270 + rotation, 315 + rotation, 165);
-    	drawSlice(ctx, '#F78F33', 315 + rotation, 360 + rotation, 165);
-    	drawSlice(ctx, '#F78F33', 0 + rotation, 45 + rotation, 165);
-
-    	drawSlice(ctx, '#5085a0', 45 + rotation, 90 + rotation, 165);
-    	drawSlice(ctx, '#5085a0', 90 + rotation, 135 + rotation, 165);
-    	drawSlice(ctx, '#5085a0', 135 + rotation, 180 + rotation, 165);
-
-    	
-    	
-    	
 		ctx.fillStyle = '#ffffff';
 
  		cx = centerX;
@@ -227,28 +234,7 @@ function drawInnerSlice(ctx, colour, startDegrees, endDegrees, radius) {
  		ctx.lineTo(cx, cy);
  		ctx.closePath();
  		ctx.fill();  
- 		
- 		drawText(canvas, rotation - 67.5, 'What will my data be used for');
- 		drawText(canvas, rotation - 22.5, 'What are the benefits and who will benefit');
- 		drawText(canvas, rotation + 22.5, 'Who will be using my data?');
- 		drawText(canvas, rotation + 67.5, 'Is my data secure?');
- 		drawText(canvas, rotation + 112.5, 'Will my data be anonymous?');
- 		drawText(canvas, rotation + 157.5, 'Can I see and correct data about me?');
- 		drawText(canvas, rotation + 202.5, 'Could my data be sold?');
- 		drawText(canvas, rotation + 247.5, 'Will I be asked for consent?');
- 		
- 		
-		drawImage(ctx, rotation - 67.5, 'images/Icons-08.png');
-		drawImage(ctx, rotation - 22.5, 'images/Icons-10.png');
-		drawImage(ctx, rotation + 22.5, 'images/Icons-09.png');
-		drawImage(ctx, rotation + 67.5, 'images/Icons-07.png');
-		drawImage(ctx, rotation + 112.5, 'images/Icons-06.png');
-		drawImage(ctx, rotation + 157.5, 'images/Icons-04.png');
-		drawImage(ctx, rotation + 202.5, 'images/Icons-03.png');
-		drawImage(ctx, rotation + 247.5, 'images/Icons-05.png');
-
- 		
-//		ctx.fillStyle = '#ff00ff';
+ 		 		
 		ctx.font = '7px Arial';
 		ctx.fillTextCircle("CHOICE",centerX,centerY,27,toRadians(280+rotation), toRadians(350+rotation));
 		ctx.fillTextCircle("VALUE",centerX,centerY,27,toRadians(30+rotation), toRadians(105+rotation));
@@ -272,17 +258,18 @@ function drawInnerSlice(ctx, colour, startDegrees, endDegrees, radius) {
  		
      }
      
-     function drawImage(ctx, rotation, src) {
+     function drawImage(ctx, rotation, img) {
    	 	var xOffset = Math.cos(toRadians(rotation)) * 60;
   		var yOffset = Math.sin(toRadians(rotation)) * 60;
-    	var img = new Image();   // Create new img element
-  		img.addEventListener('load', function() {
+		if (img.complete) {
   			ctx.drawImage(img, centerX + xOffset - 40, centerY + yOffset - 40);
-  		}, false);
-  		img.src = src; 
+		} else {
+			window.setTimeout(drawImage, 1000, rotation, img);
+		}
      }
      
-     function drawText(canvas, rotation, text) {
+	function drawText(canvas, rotation, text) {
+		canvas.getContext('2d').fillStyle = '#ffffff';
     	var xOffset = Math.cos(toRadians(rotation)) * 120;
  		var yOffset = Math.sin(toRadians(rotation)) * 120;
  		paint_centered_wrap(canvas, centerX + xOffset - 40, centerY + yOffset - 35, 80, 70, text, 12, 5);
@@ -311,35 +298,94 @@ function drawInnerSlice(ctx, colour, startDegrees, endDegrees, radius) {
   </head>
 
   <body onload="draw();">
+  
+  <h1>Proof of concept only</h1>
+<p>A business will embed this script into their website, and the wheel will render with their saved data</p>
+<p>This is a test of the mechanism and styling. Box renders at fixed 700px wide. Click on one of the eight questions to see the responses (in this instance Lorem Ipsum)</p>
+  
 
+<div style="width:700px; border:1px solid grey; position:relative" id="dataFuturesEmbed">
     <canvas id="tutorial" width="350" height="350"></canvas>
+
+	<div id="dataFuturesGuidelinesAnswers" class="guideline" style="width: 300px; padding-left:20px; margin-left: 20px; float:right;border:1px solid green">
+	guidelines box
+	</div>
+</div>
 
 
 	<script>
 
-      function getMousePos(canvas, evt) {
-        var rect = canvas.getBoundingClientRect();
-        return {
-          x: evt.clientX - rect.left,
-          y: evt.clientY - rect.top
-        };
-      }
-      var canvas = document.getElementById('tutorial');
-      var context = canvas.getContext('2d');
-
-      var rotation = 0;
+function getMousePos(canvas, evt) {
+	var rect = canvas.getBoundingClientRect();
+	return {
+		x: evt.clientX - rect.left,
+		y: evt.clientY - rect.top
+	};
+}
       
-      canvas.addEventListener('click', function(evt) {
-    	  console.log('clicked');
-    	  var ctx = canvas.getContext('2d');
-    	  ctx.fillStyle = '#ffffff';
-    	  ctx.clearRect(0,0,350,350);
+var canvas = document.getElementById('tutorial');
+var context = canvas.getContext('2d');
+
+var rotation = 0;
+var desiredRotation = 0;
+var rotating = false;
+      
+canvas.addEventListener('click', function(evt) {
+	if (rotating) {
+		return;
+	}
+	var ctx = canvas.getContext('2d');
+    
+	var mousePos = getMousePos(canvas, evt);
+
+	var clicked = -1;
+	
+	for(var i=0;i<8;i++){
+		arcPath(ctx, (i*45)+rotation,((i+1)*45)+rotation,165);
+		if(ctx.isPointInPath(mousePos.x,mousePos.y)){
+			clicked = i;
+			break;
+		}
+	}
+	
+	if (clicked >= 0) {
+		document.getElementById('dataFuturesGuidelinesAnswers').innerHTML = '';
+		console.log('clicked on ',clicked);
+		rotate(315 - (i * 45));
+	}
     	  
-    	  rotation += 5;
-    	  drawSlices(ctx, rotation);
+	/* ctx.fillStyle = '#ffffff';
+	ctx.clearRect(0,0,350,350);
+    	  
+	rotation += 5;
+	drawSlices(ctx, rotation); */
 
-      });
-      
+});
+
+function rotate(desiredRotation) {
+	var ctx = canvas.getContext('2d');
+	if (desiredRotation % 360 === rotation % 360) {
+		rotating = false;
+		showSelectedText();
+		return;
+	}
+	rotation += 5;
+	ctx.fillStyle = '#ffffff';
+	ctx.clearRect(0,0,350,350);
+    	  
+	drawSlices(ctx, rotation);
+	window.requestAnimationFrame(function() {
+        rotate(desiredRotation);
+    });
+}
+
+function showSelectedText() {
+	var index = (rotation % 360) / 45;
+	
+	document.getElementById('dataFuturesGuidelinesAnswers').innerHTML = answers.answers[index].answer;
+	
+}
+
 canvas.addEventListener('mousemove', function(evt) {
 	var ctx = canvas.getContext('2d');
 	var mousePos = getMousePos(canvas, evt);
@@ -348,7 +394,7 @@ canvas.addEventListener('mousemove', function(evt) {
 	evt.stopPropagation();
 
 	mouseX=mousePos.x;
-	mouseY=mousePos.y;//parseInt(evt.clientY-offsetY);
+	mouseY=mousePos.y;
 
 	// Put your mousemove stuff here
 	var isPointer = false;
@@ -367,14 +413,37 @@ canvas.addEventListener('mousemove', function(evt) {
     
  }, false);
       
-      function definePath(p){
-    	  ctx.beginPath();
-    	  ctx.moveTo(p[0].x,p[0].y);
-    	  for(var i=1;i<p.length;i++){
-    	    ctx.lineTo(p[i].x,p[i].y);
-    	  }
-    	  ctx.closePath();
-    	}
+      
+var answers = {
+		'answers':[
+			{
+				"answer":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas iaculis nisi quis porttitor venenatis. Vestibulum lobortis nulla massa, id imperdiet libero ullamcorper et. Praesent gravida sit amet odio id commodo. Praesent rutrum ex nisl, non pulvinar purus interdum vitae. Donec tempus ultricies gravida. In in elit imperdiet, egestas tortor consequat, tincidunt mi. Nullam consectetur ex eu nisi ornare, vitae gravida metus rhoncus.",
+				"link":"http://www.datafutures.co.nz"
+			},
+			{
+				"answer":"Sed euismod metus dignissim sem molestie mattis. Nunc aliquet molestie lectus, ut vehicula metus pellentesque in. Vestibulum sollicitudin justo viverra nisl suscipit, id faucibus nulla egestas. Morbi diam turpis, tempor in sagittis sed, malesuada sit amet elit. Donec volutpat erat et libero faucibus, eu lobortis mi ultricies. Nullam risus urna, condimentum eget pretium nec, auctor sit amet erat. Nam suscipit, mi nec condimentum mattis, velit elit dapibus sem, ullamcorper tincidunt ex leo sit amet justo."
+			},
+			{	
+				"answer":"Praesent posuere ipsum ac felis malesuada tincidunt. Suspendisse ut risus vel erat maximus accumsan at molestie mauris. Proin id odio eu eros mattis efficitur ac eu urna. Integer nec turpis purus. Mauris a nisi ac arcu faucibus dapibus in a orci. Fusce egestas turpis id neque sagittis molestie. Vestibulum ultrices felis quis libero dictum mattis.",
+				"link":"http://www.datafutures.co.nz"
+			},
+			{
+				"answer":"Sed feugiat dictum massa, vel ullamcorper nisi vestibulum eleifend. Pellentesque gravida faucibus massa, vulputate malesuada erat gravida in. Duis vel metus vestibulum, interdum velit pretium, faucibus eros. Aenean metus nulla, pharetra hendrerit turpis eu, bibendum fermentum nunc. Etiam in feugiat arcu. Curabitur scelerisque euismod posuere. Proin quis eros vitae ex efficitur feugiat sit amet nec purus. Vivamus ligula nulla, iaculis sed enim at, consequat tincidunt neque."
+			},
+			{
+				"answer":"Cras iaculis nec risus eu gravida. Vivamus scelerisque mi nec feugiat posuere. Vivamus lacinia viverra orci, sit amet vulputate ipsum pellentesque nec. Donec sagittis est elit, in consequat nisi pharetra ut. Phasellus eget leo placerat, rutrum neque quis, interdum lectus. Vivamus id metus sit amet tortor mattis dapibus. Nunc sed ullamcorper orci. Fusce nec tincidunt lectus, vitae elementum ligula. Sed eu magna arcu. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas."
+			},
+			{
+				"answer":"Nulla facilisi. Aenean ultricies, risus id pulvinar gravida, metus arcu rutrum tortor, sed auctor velit ante quis diam. Pellentesque elementum imperdiet faucibus. Sed elementum lorem quis mollis ullamcorper. Quisque fermentum ullamcorper euismod. Sed a diam erat. Nunc euismod erat augue. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nam lobortis quam in cursus efficitur. Integer laoreet semper nulla, in euismod turpis tristique nec. Integer facilisis erat eu lectus sodales sollicitudin ut ac tortor. Quisque eget risus magna."
+			},
+			{
+				"answer":"Fusce faucibus, elit a lacinia consequat, metus massa commodo nisi, eu hendrerit metus purus nec sapien. Maecenas maximus id libero sed ultricies. Ut eu venenatis lacus. Sed nulla orci, fringilla ut nulla id, pharetra malesuada mauris. Nullam sed dui auctor, maximus magna sit amet, iaculis felis. Praesent elementum, mi ut lacinia venenatis, diam leo feugiat enim, ac ultrices leo velit quis justo. Vestibulum faucibus cursus diam, ut sollicitudin nisi molestie nec. Duis in dui quis nulla egestas hendrerit sed vel ipsum. Vivamus vestibulum semper consectetur."
+			},
+			{
+				"answer":"Quisque semper dictum orci, vel mattis neque. Quisque tincidunt pellentesque dolor a viverra. Suspendisse ornare pellentesque velit interdum faucibus. Aenean sed orci sed sem pulvinar scelerisque. Mauris urna magna, egestas quis neque id, interdum iaculis justo. Quisque nec rutrum velit. Maecenas turpis ex, rutrum vitae volutpat a, volutpat in elit. Nulla a porta diam, a tincidunt risus. Morbi bibendum ligula nibh, ut porttitor velit pharetra in. Pellentesque urna massa, efficitur vitae arcu rutrum, eleifend tempor ex. Duis dictum magna vel orci luctus, iaculis vestibulum neque semper."
+			}
+			]
+};
     
 	</script>
   </body>
