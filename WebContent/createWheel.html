@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="media/bootstrapWizard.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<title>Create your wheel</title>
+</head>
+<body>
+
+<div id="rootwizard">
+	<div class="navbar">
+	  <div class="navbar-inner">
+	    <div class="container">
+	<ul class="nav nav-pills">
+	  	<li><a href="#tab1" data-toggle="tab">First</a></li>
+		<li><a href="#tab2" data-toggle="tab">Second</a></li>
+		<li><a href="#tab3" data-toggle="tab">Third</a></li>
+		<li><a href="#tab4" data-toggle="tab">Forth</a></li>
+		<li><a href="#tab5" data-toggle="tab">Fifth</a></li>
+		<li><a href="#tab6" data-toggle="tab">Sixth</a></li>
+		<li><a href="#tab7" data-toggle="tab">Seventh</a></li>
+	</ul>
+	 </div>
+	  </div>
+	</div>
+    <div id="bar" class="progress">
+      <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+    </div>
+	<div class="tab-content">
+	    <div class="tab-pane" id="tab1">
+	      <div class="question" id="question1">
+<h1>What will my data be used for?</h1>
+<a href="#" class="btn btn-lg btn-success" data-toggle="modal" data-target="#q1help">Click to open help</a></div>
+<div class="form-group">
+<textarea id="q1answer" class="form-control" rows="3">
+</textarea>
+</div>
+<div class="modal fade" id="q1help" tabindex="-1" role="dialog" aria-labelledby="q1help" aria-hidden="true">
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+    <h2>Guidelines</h2>
+<p>
+The information on purpose needs to include:
+</p>
+<ul>
+	<li>a clearly identified, specific purpose for the data</li>
+	<li>a list of the data being collected</li>
+	<li>a description of any algorithms used</li>
+	<li>disclosure of possible future purposes.</li>
+</ul>
+<p>Clearly <em>explain</em> the use and purpose of the collection of data, for example &ndash;</p>
+<blockquote>
+<p>We only collect data that are necessary to deliver the service we offer, and no more.</p>
+<p>We will make your medical records accessible online to specialists and hospitals. This will provide access to your medical history if you need
+treatment, including in an emergency.</p>
+<p>We use your information to target marketing to you. We also share it with the companies in our loyalty programme and they use it to target marketing
+material to you by email.</p>
+<p>We provide your information to charities so that they can approach you for support. </p>
+</blockquote>
+
+<p><strong>Provide</strong> further detail, together with concrete examples, for those interested.
+Examples might include ways you have used research to improve services in the past.
+</p>
+<p>If you can, provide the more detailed information as a click or drill-down option so
+that it can be skipped by people who are only interested in more general statements about purpose.
+</p>
+<h2>
+Data being collected
+</h2>
+<p><em>List</em> what data you are collecting in these 3 categories:</p>
+
+<table class="table"> 
+	<tr>
+		<td>1.</td>
+		<td>Data you are requiring as a condition of supplying the service or product.</td>
+		<td>In most cases this should only be the data that is strictly necessary for the service.</td>
+	</tr>
+	<tr>
+		<td>2.</td>
+		<td>Information beyond what is strictly needed for service delivery, but authorised under legislation.</td>
+		<td><p>Describe the purpose for collecting this additional data and state the authorisation clearly.</p>
+			<p>Be explicit about any consequences of not providing this additional information.</p>
+		</td>
+	</tr>
+	<tr>
+		<td>3.</td>
+		<td>Information beyond that needed for service delivery or authorised under legislation (eg for marketing or research).</td>
+		<td><p>Describe the purpose.</p>
+			<p>Be explicit about any incentives you are offering in exchange for gaining the right to use customer/client information.</p>
+		</td>
+	</tr>
+</table>
+<p>Where the data is sensitive, or some client groups are likely to have a low level of
+trust in your organisation, <em>explain</em> why it isn’t possible to achieve the purpose in
+any other way eg by using anonymous instead of personally-identified data.
+</p>
+<h2>Algorithms</h2>
+<p>If you use algorithms (formula-based decision tools) eg to determine whether to
+grant loans, what interest rate to charge, or as part of a recruitment process:</p>
+<ul>
+	<li><em>inform</em> your customers/applicants of how this works and which pieces of data are used</li>
+	<li><em>advise</em> clients of other inputs to your decision processes (eg does a staff member review applications?)</li>
+	<li><em>offer</em> the applicant the right to contest the decision, including the data that was used in the algorithm.</li>
+</ul>
+<h2>
+Future Uses
+</h2>
+<p>Explicitly address whether the data may be used for other purposes in the future
+and if so what.
+</p>
+<p>If it isn’t possible to be precise about possible future uses, provide an assurance
+that the person will be asked to give consent to that use before it occurs.</p>
+</div>
+</div>
+</div>
+	    </div>
+	    <div class="tab-pane" id="tab2">
+	      <div class="question" id="question2">
+<h1>What are the benefits and who will benefit?</h1>
+<a href="#" class="btn btn-lg btn-success" data-toggle="modal" data-target="#q2help">Click to open help</a>
+</div>
+<div class="form-group">
+<textarea id="q2answer" class="form-control" rows="3">
+</textarea>
+</div>
+<div class="modal fade" id="q2help" tabindex="-1" role="dialog" aria-labelledby="q2help" aria-hidden="true">
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+    <h2>Guidelines</h2>
+<p>The information on benefits needs to include:</p>
+<ul>
+	<li>factual evidence and examples of benefits</li>
+	<li>clarity about both personal and wider benefits.</li>
+	<li>evidence that the proposed data use and sharing will bring about the benefits claimed.</li>
+</ul>
+<h2>Benefits</h2>
+<p>
+<em>Explain</em> what personal benefits the individual or their family can expect. Also
+explain any wider benefits (for example to the organisation itself, an iwi, or to
+society as a whole.)
+</p>
+<p>
+Be specific and provide evidence about how the proposed data use will lead to
+the benefits claimed.
+</p>
+<p>
+Proven outcomes are the best way to demonstrate benefits. <em>Provide</em> concrete
+examples of similar data use and the resulting benefits or a concrete example of
+an anticipated benefit from the current use.
+</p>
+<h2>Marketing</h2>
+<p>Where personally-identifiable data is collected to target people for advertising,
+the benefit accrues mainly to the company as profit and the level of comfort is
+likely to be less. Therefore, people might expect to receive a considerable
+amount of personal benefit.
+</p>
+<p><em>Be explicit</em> about any benefits offered in exchange for the use of personal data
+eg free services, such as access to a social networking platform, or access to
+services at a lower charge.
+</p>
+<p><em>Explain</em> whether any other organisations are benefiting from the information.
+Which organisations? How are they benefiting?
+</p>
+<p>
+If you intend providing information to charities or political organisations, this
+should also be made clear.
+</p>
+<p><em>Give</em> people the ability to opt out of direct marketing that uses their data.
+Make this option readily accessible.
+</p>
+</div>
+</div>
+</div>
+
+	    </div>
+		<div class="tab-pane" id="tab3">
+			<div class="question" id="question3">
+<h1>Who will be using my data?</h1>
+<a href="#" class="btn btn-lg btn-success" data-toggle="modal" data-target="#q3help">Click to open help</a>
+</div>
+<div class="form-group">
+<textarea id="q3answer" class="form-control" rows="3">
+</textarea>
+</div>
+<div class="modal fade" id="q3help" tabindex="-1" role="dialog" aria-labelledby="q3help" aria-hidden="true">
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+    <h2>Guidelines</h2>
+<p>If you will not be linking the data with any other datasets or sharing the data with
+any other organisations, <em>state</em> this clearly.</p>
+<p>Otherwise &mdash;<br/>
+<em>Identify</em> which data will be linked, what data it will be linked with, and for what
+purposes.
+</p>
+<p><em>Identify</em> which data will be shared 10 with other organisations &mdash; which organisations and for what purposes.</p>
+</div>
+</div>
+</div>
+	    </div>
+		<div class="tab-pane" id="tab4">
+			<div class="question" id="question4">
+<h1>Is my data secure?</h1>
+<a href="#" class="btn btn-lg btn-success" data-toggle="modal" data-target="#q4help">Click to open help</a>
+</div>
+<div class="form-group">
+<textarea id="q4answer" class="form-control" rows="3">
+</textarea>
+</div>
+<div class="modal fade" id="q4help" tabindex="-1" role="dialog" aria-labelledby="q4help" aria-hidden="true">
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+    <h2>Guidelines</h2>
+<p><em>Build</em> data protection safeguards into your products and services from the earliest
+stages of development.</p>
+<p><em>Outline</em> the measures you have in place to keep data secure and measures taken by
+other agencies that you are sharing data with. This might include:</p>
+<ul>
+	<li>describing who will have access to data and their training, credentials and
+referee checks, declarations of confidentiality</li>
+	<li>the rules and protocols in place and any consequences for staff who break them</li>
+	<li>security arrangements that prevent unauthorised access to the data.</li>
+</ul>
+<p>If there is a data breach, <em>inform</em> the people affected as soon as possible. This will
+give your clients or customers the best opportunity to protect themselves.
+</p>
+<p>
+(Note that the guidelines in the next section also assist with data security.)
+</p>
+</div>
+</div>
+</div>
+	    </div>
+		<div class="tab-pane" id="tab5">
+			5
+	    </div>
+		<div class="tab-pane" id="tab6">
+			6
+	    </div>
+		<div class="tab-pane" id="tab7">
+			7
+	    </div>
+		<ul class="pager wizard">
+			<li class="previous first" style="display:none;"><a href="#">First</a></li>
+			<li class="previous"><a href="#">Previous</a></li>
+			<li class="next last" style="display:none;"><a href="#">Last</a></li>
+		  	<li class="next"><a href="#">Next</a></li>
+		</ul>
+	</div>
+</div>
+
+
+
+
+
+<script>
+$(document).ready(function() {
+  	$('#rootwizard').bootstrapWizard({onTabShow: function(tab, navigation, index) {
+		var $total = navigation.find('li').length;
+		var $current = index+1;
+		var $percent = ($current/$total) * 100;
+		$('#rootwizard .progress-bar').css({width:$percent+'%'});
+	}});
+});
+
+</script>
+
+</body>
+</html>
