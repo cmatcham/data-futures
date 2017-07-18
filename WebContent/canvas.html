@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<title>Canvas tutorial</title>
+		<script type="text/javascript">
+
+
+		CanvasRenderingContext2D.prototype.fillTextCircle = function(text,x,y,radius,startRotation, endRotation){
+			   var numRadsPerLetter = (endRotation - startRotation) / text.length;
+			   this.save();
+			   this.translate(x,y);
+			   this.rotate(startRotation);
+			   startRotation = startRotation % (2 * Math.PI);
+			   endRotation = endRotation % (2 * Math.PI);
+
+			   if (startRotation > (3 * Math.PI / 8) && startRotation < (13 * Math.PI) / 8 && endRotation > (3 * Math.PI / 8) && endRotation < (13 * Math.PI) / 8) {
+				   this.rotate(Math.PI);
+				   this.rotate(numRadsPerLetter);
+				   for(var i=0;i<text.length;i++){
+					      this.save();
+					      this.rotate(i*numRadsPerLetter);
+		
+					      this.fillText(text[text.length - 1 - i],0,radius+6);
+					      this.restore();
+					   }
+			   } else {
+				   for(var i=0;i<text.length;i++){
+				      this.save();
+				      this.rotate(i*numRadsPerLetter);
+	
+				      this.fillText(text[i],0,-radius);
+				      this.restore();
+				   }
+			   }
+			   this.restore();
+			}
+		
+/**
+ * @param canvas : The canvas object where to draw . 
+ * @param x     :  The x position of the rectangle.
+ * @param y     :  The y position of the rectangle.
+ * @param w     :  The width of the rectangle.
+ * @param h     :  The height of the rectangle.
+ * @param text  :  The text we are going to centralize.
+ * @param fh    :  The font height (in pixels).
+ * @param spl   :  Vertical space between lines
+ */
+paint_centered_wrap = function(canvas, x, y, w, h, text, fh, spl) {
+    // The painting properties 
+    // Normally I would write this as an input parameter
+    var Paint = {
+        RECTANGLE_STROKE_STYLE : 'black',
+        RECTANGLE_LINE_WIDTH : 1,
+        VALUE_FONT : '13px Arial',
+        VALUE_FILL_STYLE : 'red'
+    }
+    /*
+     * @param ctx   : The 2d context 
+     * @param mw    : The max width of the text accepted
+     * @param font  : The font used to draw the text
+     * @param text  : The text to be splitted   into 
+     */
+    var split_lines = function(ctx, mw, font, text) {
+        // We give a little "padding"
+        // This should probably be an input param
+        // but for the sake of simplicity we will keep it
+        // this way
+        mw = mw - 10;
+        // We setup the text font to the context (if not already)
+        ctx2d.font = font;
+        // We split the text by words 
+        var words = text.split(' ');
+        var new_line = words[0];
+        var lines = [];
+        for(var i = 1; i < words.length; ++i) {
+           if (ctx.measureText(new_line + " " + words[i]).width < mw) {
+               new_line += " " + words[i];
+           } else {
+               lines.push(new_line);
+               new_line = words[i];
+           }
+        }
+        lines.push(new_line);
+        // DEBUG 
+/*         for(var j = 0; j < lines.length; ++j) {
+           console.log("line[" + j + "]=" + lines[j]);
+        } */
+        return lines;
+    }
+    // Obtains the context 2d of the canvas 
+    // It may return null
+    var ctx2d = canvas.getContext('2d');
+    if (ctx2d) {
+        // draw rectangular
+/*          ctx2d.strokeStyle=Paint.RECTANGLE_STROKE_STYLE;
+        ctx2d.lineWidth = Paint.RECTANGLE_LINE_WIDTH;
+        ctx2d.strokeRect(x, y, w, h);  */
+        // Paint text
+        var lines = split_lines(ctx2d, w, Paint.VALUE_FONT, text);
+        // Block of text height
+        var both = lines.length * (fh + spl);
+        if (both >= h) {
+            // We won't be able to wrap the text inside the area
+            // the area is too small. We should inform the user 
+            // about this in a meaningful way
+            console.log('both >= h');
+        } else {
+            // We determine the y of the first line
+            var ly = (h - both)/2 + y + spl*lines.length;
+            var lx = 0;
+            for (var j = 0, ly; j < lines.length; ++j, ly+=fh+spl) {
+                // We continue to centralize the lines
+                lx = x+w/2-ctx2d.measureText(lines[j]).width/2;
+                // DEBUG 
+                //console.log("ctx2d.fillText('"+ lines[j] +"', "+ lx +", " + ly + ")");
+                ctx2d.fillText(lines[j], lx, ly);
+            }
+        }
+    } else {
+    	console.log('else');
+    // Do something meaningful
+    }
+}
+		
+		
+var centerX = 175;
+var centerY = 175;
+
+// in case you like using degrees
+
+function toRadians(deg) {
+	return deg * Math.PI / 180
+}
+
+function drawSlice(ctx, colour, startDegrees, endDegrees, radius) {
+	var midpoint = startDegrees + ((endDegrees - startDegrees) / 2);
+	console.log(midpoint);
+	
+	var xOffset = Math.cos(toRadians(midpoint));
+	var yOffset = Math.sin(toRadians(midpoint));
+
+	var cx = centerX + (xOffset * 5);
+	var cy = centerY + (yOffset * 5);
+	ctx.fillStyle = colour;
+	ctx.beginPath();
+	ctx.moveTo(cx, cy);
+	ctx.arc(cx, cy, radius, toRadians(startDegrees), toRadians(endDegrees));
+	ctx.lineTo(cx, cy);
+	ctx.closePath();
+	ctx.fill();
+}
+
+function arcPath(ctx, startDegrees, endDegrees, radius) {
+	var midpoint = startDegrees + ((endDegrees - startDegrees) / 2);
+	
+	var xOffset = Math.cos(toRadians(midpoint));
+	var yOffset = Math.sin(toRadians(midpoint));
+
+	var cx = centerX + (xOffset * 5);
+	var cy = centerY + (yOffset * 5);
+	ctx.beginPath();
+	ctx.moveTo(cx, cy);
+	ctx.arc(cx, cy, radius, toRadians(startDegrees), toRadians(endDegrees));
+	ctx.lineTo(cx, cy);
+	ctx.closePath();
+}
+
+function drawInnerSlice(ctx, colour, startDegrees, endDegrees, radius) {
+	var midpoint = startDegrees + ((endDegrees - startDegrees) / 2);
+	console.log(midpoint);
+	
+	var xOffset = Math.cos(toRadians(midpoint));
+	var yOffset = Math.sin(toRadians(midpoint));
+
+	var cx = centerX + (xOffset*2);
+	var cy = centerY + (yOffset*2);
+	ctx.fillStyle = colour;
+	ctx.beginPath();
+	ctx.moveTo(cx, cy);
+	ctx.arc(cx, cy, radius, toRadians(startDegrees), toRadians(endDegrees));
+	ctx.lineTo(cx, cy);
+	ctx.closePath();
+	ctx.fill();
+}
+   
+   
+     
+     function drawSlices(ctx, rotation) {
+		 
+    	drawSlice(ctx, '#9352a0', 180 + rotation, 225 + rotation, 165);
+    	drawSlice(ctx, '#9352a0', 225 + rotation, 270 + rotation, 165);
+
+    	drawSlice(ctx, '#F78F33', 270 + rotation, 315 + rotation, 165);
+    	drawSlice(ctx, '#F78F33', 315 + rotation, 360 + rotation, 165);
+    	drawSlice(ctx, '#F78F33', 0 + rotation, 45 + rotation, 165);
+
+    	drawSlice(ctx, '#5085a0', 45 + rotation, 90 + rotation, 165);
+    	drawSlice(ctx, '#5085a0', 90 + rotation, 135 + rotation, 165);
+    	drawSlice(ctx, '#5085a0', 135 + rotation, 180 + rotation, 165);
+
+    	
+    	
+    	
+		ctx.fillStyle = '#ffffff';
+
+ 		cx = centerX;
+ 		cy = centerY;
+ 		ctx.beginPath();
+ 		ctx.moveTo(cx, cy);
+ 		ctx.arc(cx, cy, 40, 0, Math.PI * 2);
+ 		ctx.lineTo(cx, cy);
+ 		ctx.closePath();
+ 		ctx.fill(); 
+
+    	drawInnerSlice(ctx, '#9352a0', 180 + rotation, 270 + rotation, 35);
+    	drawInnerSlice(ctx, '#F78F33', 270 + rotation, 405 + rotation, 35);
+    	drawInnerSlice(ctx, '#5085a0', 45 + rotation, 180 + rotation, 35);
+    	
+ 		ctx.fillStyle = '#ffffff';
+ 		
+  		cx = centerX;
+ 		cy = centerY;
+ 		ctx.beginPath();
+ 		ctx.moveTo(cx, cy);
+ 		ctx.arc(cx, cy, 25, 0, Math.PI * 2);
+ 		ctx.lineTo(cx, cy);
+ 		ctx.closePath();
+ 		ctx.fill();  
+ 		
+ 		drawText(canvas, rotation - 67.5, 'What will my data be used for');
+ 		drawText(canvas, rotation - 22.5, 'What are the benefits and who will benefit');
+ 		drawText(canvas, rotation + 22.5, 'Who will be using my data?');
+ 		drawText(canvas, rotation + 67.5, 'Is my data secure?');
+ 		drawText(canvas, rotation + 112.5, 'Will my data be anonymous?');
+ 		drawText(canvas, rotation + 157.5, 'Can I see and correct data about me?');
+ 		drawText(canvas, rotation + 202.5, 'Could my data be sold?');
+ 		drawText(canvas, rotation + 247.5, 'Will I be asked for consent?');
+ 		
+ 		
+		drawImage(ctx, rotation - 67.5, 'images/Icons-08.png');
+		drawImage(ctx, rotation - 22.5, 'images/Icons-10.png');
+		drawImage(ctx, rotation + 22.5, 'images/Icons-09.png');
+		drawImage(ctx, rotation + 67.5, 'images/Icons-07.png');
+		drawImage(ctx, rotation + 112.5, 'images/Icons-06.png');
+		drawImage(ctx, rotation + 157.5, 'images/Icons-04.png');
+		drawImage(ctx, rotation + 202.5, 'images/Icons-03.png');
+		drawImage(ctx, rotation + 247.5, 'images/Icons-05.png');
+
+ 		
+//		ctx.fillStyle = '#ff00ff';
+		ctx.font = '7px Arial';
+		ctx.fillTextCircle("CHOICE",centerX,centerY,27,toRadians(280+rotation), toRadians(350+rotation));
+		ctx.fillTextCircle("VALUE",centerX,centerY,27,toRadians(30+rotation), toRadians(105+rotation));
+		ctx.fillTextCircle("PROTECTION",centerX,centerY,27,toRadians(145+rotation), toRadians(260+rotation));
+ 		
+		ctx.fillStyle = '#000000';
+ 		
+  		cx = centerX;
+ 		cy = centerY;
+ 		ctx.beginPath();
+ 		ctx.moveTo(cx, cy);
+ 		ctx.arc(cx, cy, 20, 0, Math.PI * 2);
+ 		ctx.lineTo(cx, cy);
+ 		ctx.closePath();
+ 		ctx.fill();  
+ 		
+ 		ctx.fillStyle = '#ffffff';
+ 		ctx.fillText('Trusted', centerX - 12, centerY - 4);
+ 		ctx.fillText('Data Use', centerX - 14, centerY + 4);
+		
+ 		
+     }
+     
+     function drawImage(ctx, rotation, src) {
+   	 	var xOffset = Math.cos(toRadians(rotation)) * 60;
+  		var yOffset = Math.sin(toRadians(rotation)) * 60;
+    	var img = new Image();   // Create new img element
+  		img.addEventListener('load', function() {
+  			ctx.drawImage(img, centerX + xOffset - 40, centerY + yOffset - 40);
+  		}, false);
+  		img.src = src; 
+     }
+     
+     function drawText(canvas, rotation, text) {
+    	var xOffset = Math.cos(toRadians(rotation)) * 120;
+ 		var yOffset = Math.sin(toRadians(rotation)) * 120;
+ 		paint_centered_wrap(canvas, centerX + xOffset - 40, centerY + yOffset - 35, 80, 70, text, 12, 5);
+ 		
+     }
+
+      function draw() {
+        var canvas = document.getElementById('tutorial');
+        if (canvas.getContext) {
+          var ctx = canvas.getContext('2d');
+        }
+		drawSlices(ctx, 0);
+
+      }
+				
+      
+
+      </script>
+
+    <style type="text/css">
+
+      canvas { border: 1px solid black; }
+
+    </style>
+
+  </head>
+
+  <body onload="draw();">
+
+    <canvas id="tutorial" width="350" height="350"></canvas>
+
+
+	<script>
+
+      function getMousePos(canvas, evt) {
+        var rect = canvas.getBoundingClientRect();
+        return {
+          x: evt.clientX - rect.left,
+          y: evt.clientY - rect.top
+        };
+      }
+      var canvas = document.getElementById('tutorial');
+      var context = canvas.getContext('2d');
+
+      var rotation = 0;
+      
+      canvas.addEventListener('click', function(evt) {
+    	  console.log('clicked');
+    	  var ctx = canvas.getContext('2d');
+    	  ctx.fillStyle = '#ffffff';
+    	  ctx.clearRect(0,0,350,350);
+    	  
+    	  rotation += 5;
+    	  drawSlices(ctx, rotation);
+
+      });
+      
+canvas.addEventListener('mousemove', function(evt) {
+	var ctx = canvas.getContext('2d');
+	var mousePos = getMousePos(canvas, evt);
+	
+	evt.preventDefault();
+	evt.stopPropagation();
+
+	mouseX=mousePos.x;
+	mouseY=mousePos.y;//parseInt(evt.clientY-offsetY);
+
+	// Put your mousemove stuff here
+	var isPointer = false;
+	for(var i=0;i<8;i++){
+		arcPath(ctx, (i*45)+rotation,((i+1)*45)+rotation,165);
+		if(ctx.isPointInPath(mouseX,mouseY)){
+    	   	isPointer = true;
+    	   	break;
+    	}
+    }
+    if(isPointer){
+		canvas.style.cursor='pointer';              
+	} else {
+		canvas.style.cursor = 'default';
+	}
+    
+ }, false);
+      
+      function definePath(p){
+    	  ctx.beginPath();
+    	  ctx.moveTo(p[0].x,p[0].y);
+    	  for(var i=1;i<p.length;i++){
+    	    ctx.lineTo(p[i].x,p[i].y);
+    	  }
+    	  ctx.closePath();
+    	}
+    
+	</script>
+  </body>
+
+</html>

@@ -72,6 +72,10 @@ function init($) {
 
 		var elements = $("#dataFuturesEmbed ul.wheel li");
 		for (var i = 0; i < 8; i++) {
+			
+			if ($(elements[i]).is(':animated')) {
+				continue;
+			};
 			var currentRotation = getCssRotation(elements[i]);
 			if (currentRotation < 1) {
 				currentRotation = 360 + currentRotation;
