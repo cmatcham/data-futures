@@ -17,177 +17,291 @@
         (document.getElementsByTagName("head")[0] || document.documentElement).appendChild(script);
     }
 })(window, document, "3.0", function($, jquery_loaded) {
+	console.log('have a jquery, initing');
 	$( document ).ready(init);
 });
 
 
+var dataFuturesWheel = {
+	'canvas'	:	null,
+	'centerX'	:	175,
+	'centerY'	:	175,
+	'slices'	: [
+		{'start':180,'end':225,'color':'#9352a0', 'text':'Could my data be sold?', 'src':'images/Icons-03.png'},
+		{'start':225,'end':270,'color':'#9352a0', 'text':'Will I be asked for consent?', 'src':'images/Icons-05.png'},
+		{'start':270,'end':315,'color':'#F78F33', 'text':'What will my data be used for?', 'src':'images/Icons-08.png'},
+		{'start':315,'end':360,'color':'#F78F33', 'text':'What are the benefits and who will benefit?', 'src':'images/Icons-10.png'},
+		{'start':0,  'end':45, 'color':'#F78F33', 'text':'Who will be using my data?', 'src':'images/Icons-09.png'},
+		{'start':45, 'end':90, 'color':'#5085a0', 'text':'Is my data secure?', 'src':'images/Icons-07.png'},
+		{'start':90, 'end':135,'color':'#5085a0', 'text':'Will my data be anonymous?', 'src':'images/Icons-06.png'},
+		{'start':135,'end':180,'color':'#5085a0', 'text':'Can I see and correct data about me?', 'src':'images/Icons-04.png'}
+			
+	],
+	'init'		:	function() {
+		this.canvas = document.getElementById('dataFuturesWheelCanvas');
+		this.slices.forEach(function(slice) {
+			slice.img = new Image();
+			slice.img.src = slice.src;
+		});
+	},
+	toRadians	:	function(deg) {
+		return deg * Math.PI / 180;
+	},
+	drawSlice	:	function(ctx, colour, startDegrees, endDegrees, radius) {
+		var toRadians = this.toRadians;
+		var midpoint = startDegrees + ((endDegrees - startDegrees) / 2);
+		
+		var xOffset = Math.cos(toRadians(midpoint));
+		var yOffset = Math.sin(toRadians(midpoint));
+
+		var cx = this.centerX + (xOffset * 5);
+		var cy = this.centerY + (yOffset * 5);
+		ctx.fillStyle = colour;
+		ctx.beginPath();
+		ctx.moveTo(cx, cy);
+		ctx.arc(cx, cy, radius, toRadians(startDegrees), toRadians(endDegrees));
+		ctx.lineTo(cx, cy);
+		ctx.closePath();
+		ctx.fill();
+	},
+	arcPath	:	function(ctx, startDegrees, endDegrees, radius) {
+		var midpoint = startDegrees + ((endDegrees - startDegrees) / 2);
+		
+		var xOffset = Math.cos(toRadians(midpoint));
+		var yOffset = Math.sin(toRadians(midpoint));
+
+		var cx = centerX + (xOffset * 5);
+		var cy = centerY + (yOffset * 5);
+		ctx.beginPath();
+		ctx.moveTo(cx, cy);
+		ctx.arc(cx, cy, radius, toRadians(startDegrees), toRadians(endDegrees));
+		ctx.lineTo(cx, cy);
+		ctx.closePath();
+	},
+	drawInnerSlice:	function(ctx, colour, startDegrees, endDegrees, radius) {
+		var self = this;
+		var midpoint = startDegrees + ((endDegrees - startDegrees) / 2);
+		
+		var xOffset = Math.cos(self.toRadians(midpoint));
+		var yOffset = Math.sin(self.toRadians(midpoint));
+
+		var cx = self.centerX + (xOffset*2);
+		var cy = self.centerY + (yOffset*2);
+		ctx.fillStyle = colour;
+		ctx.beginPath();
+		ctx.moveTo(cx, cy);
+		ctx.arc(cx, cy, radius, self.toRadians(startDegrees), self.toRadians(endDegrees));
+		ctx.lineTo(cx, cy);
+		ctx.closePath();
+		ctx.fill();
+	},
+	
+	drawSlices	:	function (ctx, rotation) {
+		var self = this;
+		var toRadians = this.toRadians;
+		this.slices.forEach(function(slice) {
+			self.drawSlice(ctx, slice.color, slice.start + rotation, slice.end + rotation, 165);
+			self.drawText(canvas, (rotation + slice.start + 22.5) % 360, slice.text);
+			self.drawImage(ctx, rotation + slice.start + 22.5, slice.img);
+		});
+
+		ctx.fillStyle = '#ffffff';
+
+		cx = self.centerX;
+		cy = self.centerY;
+		ctx.beginPath();
+		ctx.moveTo(cx, cy);
+		ctx.arc(cx, cy, 40, 0, Math.PI * 2);
+		ctx.lineTo(cx, cy);
+		ctx.closePath();
+		ctx.fill(); 
+
+		self.drawInnerSlice(ctx, '#9352a0', 180 + rotation, 270 + rotation, 35);
+		self.drawInnerSlice(ctx, '#F78F33', 270 + rotation, 405 + rotation, 35);
+		self.drawInnerSlice(ctx, '#5085a0', 45 + rotation, 180 + rotation, 35);
+		
+		ctx.fillStyle = '#ffffff';
+		
+		cx = self.centerX;
+		cy = self.centerY;
+		ctx.beginPath();
+		ctx.moveTo(cx, cy);
+		ctx.arc(cx, cy, 25, 0, Math.PI * 2);
+		ctx.lineTo(cx, cy);
+		ctx.closePath();
+		ctx.fill();  
+		 		
+		ctx.font = '7px Arial';
+		ctx.fillTextCircle("CHOICE",self.centerX,self.centerY,27,toRadians(280+rotation), toRadians(350+rotation));
+		ctx.fillTextCircle("VALUE",self.centerX,self.centerY,27,toRadians(30+rotation), toRadians(105+rotation));
+		ctx.fillTextCircle("PROTECTION",self.centerX,self.centerY,27,toRadians(145+rotation), toRadians(260+rotation));
+		
+		ctx.fillStyle = '#000000';
+		
+		cx = self.centerX;
+		cy = self.centerY;
+		ctx.beginPath();
+		ctx.moveTo(cx, cy);
+		ctx.arc(cx, cy, 20, 0, Math.PI * 2);
+		ctx.lineTo(cx, cy);
+		ctx.closePath();
+		ctx.fill();  
+		
+		ctx.fillStyle = '#ffffff';
+		ctx.fillText('Trusted', self.centerX - 12, self.centerY - 4);
+		ctx.fillText('Data Use', self.centerX - 14, self.centerY + 4);
+			
+	},
+	     
+	drawImage	:	function (ctx, rotation, img) {
+		console.log('drawImage this', this);
+		var xOffset = Math.cos(this.toRadians(rotation)) * 60;
+		var yOffset = Math.sin(this.toRadians(rotation)) * 60;
+		if (img.complete) {
+			ctx.drawImage(img, this.centerX + xOffset - 40, this.centerY + yOffset - 40);
+		} else {
+			window.setTimeout(this.drawImage.bind(this), 1000, ctx, rotation, img);
+		}
+	},
+	     
+	drawText	:	function (canvas, rotation, text) {
+		canvas.getContext('2d').fillStyle = '#ffffff';
+		var xOffset = Math.cos(this.toRadians(rotation)) * 120;
+		var yOffset = Math.sin(this.toRadians(rotation)) * 120;
+		paint_centered_wrap(canvas, this.centerX + xOffset - 40, this.centerY + yOffset - 35, 80, 70, text, 12, 5);
+
+	},
+
+	draw		:	function () {
+		var canvas = document.getElementById('dataFuturesWheelCanvas');
+		if (canvas.getContext) {
+	    	var ctx = canvas.getContext('2d');
+		}
+	    drawSlices(ctx, 0);
+
+	}
+	
+}
 
 function init($) {
-
+	console.log('initing');
 	var elem = $('#dataFutures');
 	if (!elem.length) {
 		console.log('Not able to find Data Futures embed location');
 		return;
 	}
 	
-/*	elem.append("<h1>Value</h1>	\
-<ul>	\
-	<li class='question' data-data-futures-question='0'>What will my data be used for?</li>	\
-	<li class='question' data-data-futures-question='1'>What are the benefits and who will benefit?</li>	\
-	<li class='question' data-data-futures-question='2'>Who will be using my data?</li>	\
-</ul>	\
-<h1>Protections</h1>	\
-<ul>	\
-	<li class='question' data-data-futures-question='3'>Is my data secure?</li>	\
-	<li class='question' data-data-futures-question='4'>Will my data be anonymous?</li>	\
-	<li class='question' data-data-futures-question='5'>Can I see and correct data about me?</li>	\
-	<li class='question' data-data-futures-question='6'>Could my data be sold?</li>	\
-</ul>	\
-<h1>Choice</h1>	\
-<ul>	\
-	<li class='question' data-data-futures-question='7'>Will I be asked for consent?</li>	\
-</ul>	\
-<div id='answers'></div>	\
-		");
+	elem.append("<canvas id='dataFuturesWheelCanvas' width='350px' height='350px'></canvas>");
 
-*/
+	canvas = document.getElementById('dataFuturesWheelCanvas');
+	var ctx = canvas.getContext('2d');
+	dataFuturesWheel.init();
+	dataFuturesWheel.drawSlices(ctx, 0);
+}
 
-	$("ul li.question").on("click", function() {
-		console.log('clicked ', $(this).data("dataFuturesQuestion"));
-		var index = $(this).data("dataFuturesQuestion");
-		console.log('elem',elem);
-		console.log('embed',elem.data('embed'));
-		var responses = LZString.decompressFromBase64(elem.data('embed'));
-		var responseObject = JSON.parse(responses);
-		$('#answers').text(responseObject.answers[index].answer);
-	});
 
-	$("#dataFuturesEmbed ul.wheel li").on("click", function() {
-		var index = $(this).data("dataFuturesQuestion");
-		
-		var rotate = $(this).css("transform");
-		var rotation = getCssRotation($(this)[0]);
-		
-		var difference = rotation - 90;
+/**
+ * Write text on a path
+ */
+CanvasRenderingContext2D.prototype.fillTextCircle = function(text,x,y,radius,startRotation, endRotation){
+	var numRadsPerLetter = (endRotation - startRotation) / text.length;
+	this.save();
+	this.translate(x,y);
+	this.rotate(startRotation);
+	startRotation = startRotation % (2 * Math.PI);
+	endRotation = endRotation % (2 * Math.PI);
 
-		var elements = $("#dataFuturesEmbed ul.wheel li");
-		for (var i = 0; i < 8; i++) {
-			
-			if ($(elements[i]).is(':animated')) {
-				continue;
-			};
-			var currentRotation = getCssRotation(elements[i]);
-			if (currentRotation < 1) {
-				currentRotation = 360 + currentRotation;
-			}
-			$(elements[i]).css('border-spacing',currentRotation+'px');  
+	if (startRotation > (3 * Math.PI / 8) && startRotation < (13 * Math.PI) / 8 && endRotation > (3 * Math.PI / 8) && endRotation < (13 * Math.PI) / 8) {
+		this.rotate(Math.PI);
+		this.rotate(numRadsPerLetter);
+		for(var i=0;i<text.length;i++){
+			this.save();
+			this.rotate(i*numRadsPerLetter);
 
-			if (currentRotation > 360) {
-				currentRotation = currentRotation - 360;
-				$(elements[i]).css('transform','rotate('+currentRotation+'deg)');  
-				$(elements[i]).css('border-spacing',currentRotation+'px');  
-			}
-			
-			
-			var newRotation = currentRotation-difference;
-			
-			if (difference < 0  && newRotation < currentRotation) {
-				newRotation = newRotation + 360;
-			}  
-
-			if (currentRotation === 360 && newRotation === 0) {
-				continue;
-			}
-			if (currentRotation == newRotation) {
-				continue;
-			}
-
-			if (newRotation < 0) {
-				newRotation = 360 + newRotation;
-				$(elements[i]).css('transform','rotate('+(currentRotation+360)+'deg)');  
-				$(elements[i]).css('border-spacing',(currentRotation+360)+'px');  
-			}
-
-			$(elements[i]).animate({  borderSpacing: newRotation }, {
-			    step: function(now,fx) {
-			      $(this).css('transform','rotate('+now+'deg)');  
-			    },
-			    duration:'slow'
-			},'linear');
-			
-			var index = $(this).data("dataFuturesQuestion");
-			$('#dataFuturesGuidelinesAnswers').text(answers.answers[index].answer);
-			if (answers.answers[index].link) {
-				$('#dataFuturesGuidelinesAnswers').append("<p><a href="+answers.answers[index].link+">More info</a></p>");
-			}
-
+			this.fillText(text[text.length - 1 - i],0,radius+6);
+			this.restore();
 		}
-		
-	});
-}
+	} else {
+		for(var i=0;i<text.length;i++){
+			this.save();
+			this.rotate(i*numRadsPerLetter);
 
-var answers = {
-		'answers':[
-			{
-				"answer":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas iaculis nisi quis porttitor venenatis. Vestibulum lobortis nulla massa, id imperdiet libero ullamcorper et. Praesent gravida sit amet odio id commodo. Praesent rutrum ex nisl, non pulvinar purus interdum vitae. Donec tempus ultricies gravida. In in elit imperdiet, egestas tortor consequat, tincidunt mi. Nullam consectetur ex eu nisi ornare, vitae gravida metus rhoncus.",
-				"link":"http://www.datafutures.co.nz"
-			},
-			{
-				"answer":"Sed euismod metus dignissim sem molestie mattis. Nunc aliquet molestie lectus, ut vehicula metus pellentesque in. Vestibulum sollicitudin justo viverra nisl suscipit, id faucibus nulla egestas. Morbi diam turpis, tempor in sagittis sed, malesuada sit amet elit. Donec volutpat erat et libero faucibus, eu lobortis mi ultricies. Nullam risus urna, condimentum eget pretium nec, auctor sit amet erat. Nam suscipit, mi nec condimentum mattis, velit elit dapibus sem, ullamcorper tincidunt ex leo sit amet justo."
-			},
-			{	
-				"answer":"Praesent posuere ipsum ac felis malesuada tincidunt. Suspendisse ut risus vel erat maximus accumsan at molestie mauris. Proin id odio eu eros mattis efficitur ac eu urna. Integer nec turpis purus. Mauris a nisi ac arcu faucibus dapibus in a orci. Fusce egestas turpis id neque sagittis molestie. Vestibulum ultrices felis quis libero dictum mattis.",
-				"link":"http://www.datafutures.co.nz"
-			},
-			{
-				"answer":"Sed feugiat dictum massa, vel ullamcorper nisi vestibulum eleifend. Pellentesque gravida faucibus massa, vulputate malesuada erat gravida in. Duis vel metus vestibulum, interdum velit pretium, faucibus eros. Aenean metus nulla, pharetra hendrerit turpis eu, bibendum fermentum nunc. Etiam in feugiat arcu. Curabitur scelerisque euismod posuere. Proin quis eros vitae ex efficitur feugiat sit amet nec purus. Vivamus ligula nulla, iaculis sed enim at, consequat tincidunt neque."
-			},
-			{
-				"answer":"Cras iaculis nec risus eu gravida. Vivamus scelerisque mi nec feugiat posuere. Vivamus lacinia viverra orci, sit amet vulputate ipsum pellentesque nec. Donec sagittis est elit, in consequat nisi pharetra ut. Phasellus eget leo placerat, rutrum neque quis, interdum lectus. Vivamus id metus sit amet tortor mattis dapibus. Nunc sed ullamcorper orci. Fusce nec tincidunt lectus, vitae elementum ligula. Sed eu magna arcu. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas."
-			},
-			{
-				"answer":"Nulla facilisi. Aenean ultricies, risus id pulvinar gravida, metus arcu rutrum tortor, sed auctor velit ante quis diam. Pellentesque elementum imperdiet faucibus. Sed elementum lorem quis mollis ullamcorper. Quisque fermentum ullamcorper euismod. Sed a diam erat. Nunc euismod erat augue. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nam lobortis quam in cursus efficitur. Integer laoreet semper nulla, in euismod turpis tristique nec. Integer facilisis erat eu lectus sodales sollicitudin ut ac tortor. Quisque eget risus magna."
-			},
-			{
-				"answer":"Fusce faucibus, elit a lacinia consequat, metus massa commodo nisi, eu hendrerit metus purus nec sapien. Maecenas maximus id libero sed ultricies. Ut eu venenatis lacus. Sed nulla orci, fringilla ut nulla id, pharetra malesuada mauris. Nullam sed dui auctor, maximus magna sit amet, iaculis felis. Praesent elementum, mi ut lacinia venenatis, diam leo feugiat enim, ac ultrices leo velit quis justo. Vestibulum faucibus cursus diam, ut sollicitudin nisi molestie nec. Duis in dui quis nulla egestas hendrerit sed vel ipsum. Vivamus vestibulum semper consectetur."
-			},
-			{
-				"answer":"Quisque semper dictum orci, vel mattis neque. Quisque tincidunt pellentesque dolor a viverra. Suspendisse ornare pellentesque velit interdum faucibus. Aenean sed orci sed sem pulvinar scelerisque. Mauris urna magna, egestas quis neque id, interdum iaculis justo. Quisque nec rutrum velit. Maecenas turpis ex, rutrum vitae volutpat a, volutpat in elit. Nulla a porta diam, a tincidunt risus. Morbi bibendum ligula nibh, ut porttitor velit pharetra in. Pellentesque urna massa, efficitur vitae arcu rutrum, eleifend tempor ex. Duis dictum magna vel orci luctus, iaculis vestibulum neque semper."
-			}
-			]
-};
-
-
-function getCssRotation(el) {
-	var st = window.getComputedStyle(el, null);
-	var tr = st.getPropertyValue("-webkit-transform") ||
-	         st.getPropertyValue("-moz-transform") ||
-	         st.getPropertyValue("-ms-transform") ||
-	         st.getPropertyValue("-o-transform") ||
-	         st.getPropertyValue("transform") ||
-	         "FAIL";
-
-	// rotation matrix - http://en.wikipedia.org/wiki/Rotation_matrix
-
-	if (tr === 'FAIL') {
-		return 90;
+			this.fillText(text[i],0,-radius);
+			this.restore();
+		}
 	}
-	
-	var values = tr.split('(')[1].split(')')[0].split(',');
-	var a = values[0];
-	var b = values[1];
-	var c = values[2];
-	var d = values[3];
-
-	var scale = Math.sqrt(a*a + b*b);
-
-	// arc sin, convert from radians to degrees, round
-	var sin = b/scale;
-
-	var angle = Math.round(Math.atan2(b, a) * (180/Math.PI));
-
-	return angle;
+	this.restore();
 }
+
+/**
+ * @param canvas : The canvas object where to draw . 
+ * @param x     :  The x position of the rectangle.
+ * @param y     :  The y position of the rectangle.
+ * @param w     :  The width of the rectangle.
+ * @param h     :  The height of the rectangle.
+ * @param text  :  The text we are going to centralize.
+ * @param fh    :  The font height (in pixels).
+ * @param spl   :  Vertical space between lines
+ */
+paint_centered_wrap = function(canvas, x, y, w, h, text, fh, spl) {
+    var Paint = {
+        VALUE_FONT : '13px Arial'
+    }
+    /*
+     * @param ctx   : The 2d context 
+     * @param mw    : The max width of the text accepted
+     * @param font  : The font used to draw the text
+     * @param text  : The text to be splitted   into 
+     */
+	var split_lines = function(ctx, mw, font, text) {
+        // We give a little "padding"
+
+        mw = mw - 10;
+        // We setup the text font to the context (if not already)
+        ctx2d.font = font;
+        // We split the text by words 
+        var words = text.split(' ');
+        var new_line = words[0];
+        var lines = [];
+        for(var i = 1; i < words.length; ++i) {
+        	if (ctx.measureText(new_line + " " + words[i]).width < mw) {
+        		new_line += " " + words[i];
+           } else {
+        	   lines.push(new_line);
+        	   new_line = words[i];
+           }
+        }
+        lines.push(new_line);
+        return lines;
+    }
+
+    var ctx2d = canvas.getContext('2d');
+    if (ctx2d) {
+
+        // Paint text
+        var lines = split_lines(ctx2d, w, Paint.VALUE_FONT, text);
+        // Block of text height
+        var both = lines.length * (fh + spl);
+        if (both >= h) {
+            // We won't be able to wrap the text inside the area
+            // the area is too small. We should inform the user 
+            // about this in a meaningful way
+            console.log('both >= h');
+        } else {
+            // We determine the y of the first line
+            var ly = (h - both)/2 + y + spl*lines.length;
+            var lx = 0;
+            for (var j = 0, ly; j < lines.length; ++j, ly+=fh+spl) {
+                // We continue to centralise the lines
+                lx = x+w/2-ctx2d.measureText(lines[j]).width/2;
+                ctx2d.fillText(lines[j], lx, ly);
+            }
+        }
+    } else {
+    	console.log('No context!');
+    }
+}
+	
 
 
 //Copyright (c) 2013 Pieroxy <pieroxy@pieroxy.net>
