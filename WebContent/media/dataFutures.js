@@ -18,7 +18,7 @@
     }
 })(window, document, "3.0", function($, jquery_loaded) {
 	console.log('have a jquery, initing');
-	$( document ).ready(init);
+	$( document ).ready(initDataFuturesWheel);
 });
 
 
@@ -26,6 +26,8 @@ var dataFuturesWheel = {
 	'canvas'	:	null,
 	'centerX'	:	175,
 	'centerY'	:	175,
+	'rotation'	:	0,
+	'rotating'	:	false,
 	'slices'	: [
 		{'start':180,'end':225,'color':'#9352a0', 'text':'Could my data be sold?', 'src':'images/Icons-03.png'},
 		{'start':225,'end':270,'color':'#9352a0', 'text':'Will I be asked for consent?', 'src':'images/Icons-05.png'},
@@ -41,7 +43,7 @@ var dataFuturesWheel = {
 		this.canvas = document.getElementById('dataFuturesWheelCanvas');
 		this.slices.forEach(function(slice) {
 			slice.img = new Image();
-			slice.img.src = slice.src;
+			slice.img.src = 'http://parhelion.co.nz/dataFutures/'+slice.src;
 		});
 	},
 	toRadians	:	function(deg) {
@@ -65,13 +67,14 @@ var dataFuturesWheel = {
 		ctx.fill();
 	},
 	arcPath	:	function(ctx, startDegrees, endDegrees, radius) {
+		var toRadians = this.toRadians;
 		var midpoint = startDegrees + ((endDegrees - startDegrees) / 2);
 		
 		var xOffset = Math.cos(toRadians(midpoint));
 		var yOffset = Math.sin(toRadians(midpoint));
 
-		var cx = centerX + (xOffset * 5);
-		var cy = centerY + (yOffset * 5);
+		var cx = this.centerX + (xOffset * 5);
+		var cy = this.centerY + (yOffset * 5);
 		ctx.beginPath();
 		ctx.moveTo(cx, cy);
 		ctx.arc(cx, cy, radius, toRadians(startDegrees), toRadians(endDegrees));
@@ -154,7 +157,6 @@ var dataFuturesWheel = {
 	},
 	     
 	drawImage	:	function (ctx, rotation, img) {
-		console.log('drawImage this', this);
 		var xOffset = Math.cos(this.toRadians(rotation)) * 60;
 		var yOffset = Math.sin(this.toRadians(rotation)) * 60;
 		if (img.complete) {
@@ -179,24 +181,118 @@ var dataFuturesWheel = {
 		}
 	    drawSlices(ctx, 0);
 
+	},
+	
+	rotate	:	function (desiredRotation) {
+		var self = this;
+
+		var ctx = canvas.getContext('2d');
+		if (desiredRotation % 360 === self.rotation % 360) {
+			self.rotating = false;
+			//showSelectedText();
+			return;
+		}
+		
+		desiredRotation = desiredRotation % 360;
+		self.rotation = self.rotation % 360;
+		if (desiredRotation > self.rotation) {
+			self.rotation = self.rotation + 360;
+		}
+		
+		if (self.rotation - desiredRotation > (desiredRotation + 360 - self.rotation)) {
+			self.rotation += 5;
+		} else {	
+			self.rotation -= 5;
+			if (self.rotation <= 0) {
+				self.rotation += 360;
+			}
+		}
+		ctx.fillStyle = '#ffffff';
+		ctx.clearRect(0,0,350,350);
+	    	  
+		self.drawSlices(ctx, self.rotation);
+		window.requestAnimationFrame(function() {
+			self.rotate(desiredRotation);
+	    });
+	},
+	
+	getMousePos	:	function(canvas, evt) {
+		var rect = canvas.getBoundingClientRect();
+		return {
+			x: evt.clientX - rect.left,
+			y: evt.clientY - rect.top
+		};
 	}
 	
 }
 
-function init($) {
-	console.log('initing');
+function initDataFuturesWheel($) {
 	var elem = $('#dataFutures');
 	if (!elem.length) {
 		console.log('Not able to find Data Futures embed location');
 		return;
 	}
 	
-	elem.append("<canvas id='dataFuturesWheelCanvas' width='350px' height='350px'></canvas>");
+	
+	elem.append("<canvas id='dataFuturesWheelCanvas' width='350px' height='350px'></canvas><div id='dataFuturesGuidelinesAnswers'></div>");
 
 	canvas = document.getElementById('dataFuturesWheelCanvas');
 	var ctx = canvas.getContext('2d');
 	dataFuturesWheel.init();
 	dataFuturesWheel.drawSlices(ctx, 0);
+	
+	canvas.addEventListener('click', function(evt) {
+		if (dataFuturesWheel.rotating) {
+			return;
+		}
+		var ctx = canvas.getContext('2d');
+	    
+		var mousePos = dataFuturesWheel.getMousePos(canvas, evt);
+
+		var clicked = -1;
+		
+		for(var i=0;i<8;i++){
+			dataFuturesWheel.arcPath(ctx, (i*45)+dataFuturesWheel.rotation,((i+1)*45)+dataFuturesWheel.rotation,165);
+			if(ctx.isPointInPath(mousePos.x,mousePos.y)){
+				clicked = i;
+				break;
+			}
+		}
+		
+		if (clicked >= 0) {
+			document.getElementById('dataFuturesGuidelinesAnswers').innerHTML = '';
+			console.log('clicked on ',clicked);
+			dataFuturesWheel.rotate(315 - (i * 45));
+		}
+	    	 
+	});
+	
+	canvas.addEventListener('mousemove', function(evt) {
+		var ctx = canvas.getContext('2d');
+		var mousePos = dataFuturesWheel.getMousePos(canvas, evt);
+		
+		evt.preventDefault();
+		evt.stopPropagation();
+
+		mouseX=mousePos.x;
+		mouseY=mousePos.y;
+
+		// Put your mousemove stuff here
+		var isPointer = false;
+		for(var i=0;i<8;i++){
+			dataFuturesWheel.arcPath(ctx, (i*45)+dataFuturesWheel.rotation,((i+1)*45)+dataFuturesWheel.rotation,165);
+			if(ctx.isPointInPath(mouseX,mouseY)){
+	    	   	isPointer = true;
+	    	   	break;
+	    	}
+	    }
+	    if(isPointer){
+			canvas.style.cursor='pointer';              
+		} else {
+			canvas.style.cursor = 'default';
+		}
+	    
+	 }, false);
 }
 
 
