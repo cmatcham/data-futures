@@ -29,14 +29,14 @@ var dataFuturesWheel = {
 	'rotation'	:	0,
 	'rotating'	:	false,
 	'slices'	: [
-		{'start':180,'end':225,'color':'#9352a0', 'text':'Could my data be sold?', 'src':'images/Icons-03.png'},
-		{'start':225,'end':270,'color':'#9352a0', 'text':'Will I be asked for consent?', 'src':'images/Icons-05.png'},
-		{'start':270,'end':315,'color':'#F78F33', 'text':'What will my data be used for?', 'src':'images/Icons-08.png'},
-		{'start':315,'end':360,'color':'#F78F33', 'text':'What are the benefits and who will benefit?', 'src':'images/Icons-10.png'},
-		{'start':0,  'end':45, 'color':'#F78F33', 'text':'Who will be using my data?', 'src':'images/Icons-09.png'},
-		{'start':45, 'end':90, 'color':'#5085a0', 'text':'Is my data secure?', 'src':'images/Icons-07.png'},
-		{'start':90, 'end':135,'color':'#5085a0', 'text':'Will my data be anonymous?', 'src':'images/Icons-06.png'},
-		{'start':135,'end':180,'color':'#5085a0', 'text':'Can I see and correct data about me?', 'src':'images/Icons-04.png'}
+		{'start':90,'end':135,'color':'#9352a0', 'text':'Will I be asked for consent?', 'src':'images/Icons-05.png'},
+		{'start':135,'end':180,'color':'#9352a0', 'text':'Could my data be sold?', 'src':'images/Icons-03.png'},
+		{'start':180,'end':225,'color':'#F78F33', 'text':'What will my data be used for?', 'src':'images/Icons-08.png'},
+		{'start':225,'end':270,'color':'#F78F33', 'text':'What are the benefits and who will benefit?', 'src':'images/Icons-10.png'},
+		{'start':270,  'end':315, 'color':'#F78F33', 'text':'Who will be using my data?', 'src':'images/Icons-09.png'},
+		{'start':315, 'end':360, 'color':'#5085a0', 'text':'Is my data secure?', 'src':'images/Icons-07.png'},
+		{'start':0, 'end':45,'color':'#5085a0', 'text':'Will my data be anonymous?', 'src':'images/Icons-06.png'},
+		{'start':45,'end':90,'color':'#5085a0', 'text':'Can I see and correct data about me?', 'src':'images/Icons-04.png'}
 			
 	],
 	'init'		:	function() {
@@ -100,10 +100,12 @@ var dataFuturesWheel = {
 	},
 	
 	drawSlices	:	function (ctx, rotation) {
+		var innerRadii = 22;
+		var outerRadii = 165;
 		var self = this;
 		var toRadians = this.toRadians;
 		this.slices.forEach(function(slice) {
-			self.drawSlice(ctx, slice.color, slice.start + rotation, slice.end + rotation, 165);
+			self.drawSlice(ctx, slice.color, slice.start + rotation, slice.end + rotation, outerRadii);
 			self.drawText(canvas, (rotation + slice.start + 22.5) % 360, slice.text);
 			self.drawImage(ctx, rotation + slice.start + 22.5, slice.img);
 		});
@@ -114,14 +116,14 @@ var dataFuturesWheel = {
 		cy = self.centerY;
 		ctx.beginPath();
 		ctx.moveTo(cx, cy);
-		ctx.arc(cx, cy, 40, 0, Math.PI * 2);
+		ctx.arc(cx, cy, innerRadii + 20, 0, Math.PI * 2);
 		ctx.lineTo(cx, cy);
 		ctx.closePath();
 		ctx.fill(); 
 
-		self.drawInnerSlice(ctx, '#9352a0', 180 + rotation, 270 + rotation, 35);
-		self.drawInnerSlice(ctx, '#F78F33', 270 + rotation, 405 + rotation, 35);
-		self.drawInnerSlice(ctx, '#5085a0', 45 + rotation, 180 + rotation, 35);
+		self.drawInnerSlice(ctx, '#9352a0', this.slices[0].start + rotation, this.slices[1].end + rotation, innerRadii + 15);
+		self.drawInnerSlice(ctx, '#F78F33', this.slices[2].start + rotation, this.slices[4].end + rotation, innerRadii + 15);
+		self.drawInnerSlice(ctx, '#5085a0', this.slices[5].start + rotation, this.slices[7].end + 360 + rotation, innerRadii + 15);
 		
 		ctx.fillStyle = '#ffffff';
 		
@@ -129,15 +131,16 @@ var dataFuturesWheel = {
 		cy = self.centerY;
 		ctx.beginPath();
 		ctx.moveTo(cx, cy);
-		ctx.arc(cx, cy, 25, 0, Math.PI * 2);
+		ctx.arc(cx, cy, innerRadii + 5, 0, Math.PI * 2);
 		ctx.lineTo(cx, cy);
 		ctx.closePath();
 		ctx.fill();  
 		 		
+		var textRadius = innerRadii + 7;
 		ctx.font = '7px Arial';
-		ctx.fillTextCircle("CHOICE",self.centerX,self.centerY,27,toRadians(280+rotation), toRadians(350+rotation));
-		ctx.fillTextCircle("VALUE",self.centerX,self.centerY,27,toRadians(30+rotation), toRadians(105+rotation));
-		ctx.fillTextCircle("PROTECTION",self.centerX,self.centerY,27,toRadians(145+rotation), toRadians(260+rotation));
+		ctx.fillTextCircle("CHOICE",self.centerX,self.centerY,textRadius,toRadians(280+rotation), toRadians(350+rotation));
+		ctx.fillTextCircle("VALUE",self.centerX,self.centerY,textRadius,toRadians(30+rotation), toRadians(105+rotation));
+		ctx.fillTextCircle("PROTECTION",self.centerX,self.centerY,textRadius,toRadians(145+rotation), toRadians(260+rotation));
 		
 		ctx.fillStyle = '#000000';
 		
@@ -145,20 +148,20 @@ var dataFuturesWheel = {
 		cy = self.centerY;
 		ctx.beginPath();
 		ctx.moveTo(cx, cy);
-		ctx.arc(cx, cy, 20, 0, Math.PI * 2);
+		ctx.arc(cx, cy, innerRadii, 0, Math.PI * 2);
 		ctx.lineTo(cx, cy);
 		ctx.closePath();
 		ctx.fill();  
 		
 		ctx.fillStyle = '#ffffff';
-		ctx.fillText('Trusted', self.centerX - 12, self.centerY - 4);
+		ctx.fillText('Transparent', self.centerX - 19, self.centerY - 4);
 		ctx.fillText('Data Use', self.centerX - 14, self.centerY + 4);
 			
 	},
 	     
 	drawImage	:	function (ctx, rotation, img) {
-		var xOffset = Math.cos(this.toRadians(rotation)) * 60;
-		var yOffset = Math.sin(this.toRadians(rotation)) * 60;
+		var xOffset = Math.cos(this.toRadians(rotation)) * 62;
+		var yOffset = Math.sin(this.toRadians(rotation)) * 62;
 		if (img.complete) {
 			ctx.drawImage(img, this.centerX + xOffset - 40, this.centerY + yOffset - 40);
 		} else {
@@ -341,7 +344,7 @@ CanvasRenderingContext2D.prototype.fillTextCircle = function(text,x,y,radius,sta
  */
 paint_centered_wrap = function(canvas, x, y, w, h, text, fh, spl) {
     var Paint = {
-        VALUE_FONT : '13px Arial'
+        VALUE_FONT : '11px Arial'
     }
     /*
      * @param ctx   : The 2d context 
