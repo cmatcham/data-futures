@@ -28,22 +28,22 @@ var dataFuturesWheel = {
 	'rotation'	:	0,
 	'rotating'	:	false,
 	'slices'	: [
-		{'start':90,'end':135,'color':'#9352a0', 'text':'Will I be asked for consent?', 'src':'images/Icons-05.png'},
-		{'start':135,'end':180,'color':'#9352a0', 'text':'Could my data be sold?', 'src':'images/Icons-03.png'},
-		{'start':180,'end':225,'color':'#F78F33', 'text':'What will my data be used for?', 'src':'images/Icons-08.png'},
-		{'start':225,'end':270,'color':'#F78F33', 'text':'What are the benefits and who will benefit?', 'src':'images/Icons-10.png'},
-		{'start':270,  'end':315, 'color':'#F78F33', 'text':'Who will be using my data?', 'src':'images/Icons-09.png'},
-		{'start':315, 'end':360, 'color':'#5085a0', 'text':'Is my data secure?', 'src':'images/Icons-07.png'},
-		{'start':0, 'end':45,'color':'#5085a0', 'text':'Will my data be anonymous?', 'src':'images/Icons-06.png'},
-		{'start':45,'end':90,'color':'#5085a0', 'text':'Can I see and correct data about me?', 'src':'images/Icons-04.png'}
+		{'start':120,'end':165,'color':'#9352a0', 'text':'Could my data be sold?', 'src':'images/Icons-05.png'},
+		{'start':165,'end':210,'color':'#9352a0', 'text':'Will I be asked for consent?', 'src':'images/Icons-03.png'},
+		{'start':210,'end':255,'color':'#F78F33', 'text':'What will my data be used for?', 'src':'images/Icons-08.png'},
+		{'start':255,'end':300,'color':'#F78F33', 'text':'What are the benefits and who will benefit?', 'src':'images/Icons-10.png'},
+		{'start':300,  'end':345, 'color':'#F78F33', 'text':'Who will be using my data?', 'src':'images/Icons-09.png'},
+		{'start':345, 'end':390, 'color':'#5085a0', 'text':'Is my data secure?', 'src':'images/Icons-07.png'},
+		{'start':30, 'end':75,'color':'#5085a0', 'text':'Will my data be anonymous?', 'src':'images/Icons-06.png'},
+		{'start':75,'end':120,'color':'#5085a0', 'text':'Can I see and correct data about me?', 'src':'images/Icons-04.png'}
 			
 	],
 	'init'		:	function() {
 		this.canvas = document.getElementById('dataFuturesWheelCanvas');
-		this.slices.forEach(function(slice) {
+		/*this.slices.forEach(function(slice) {
 			slice.img = new Image();
 			slice.img.src = 'http://parhelion.co.nz/dataFutures/'+slice.src;
-		});
+		});*/
 	},
 	toRadians	:	function(deg) {
 		return deg * Math.PI / 180;
@@ -99,31 +99,36 @@ var dataFuturesWheel = {
 	},
 	
 	drawSlices	:	function (ctx, rotation) {
-		var innerRadii = 22;
+		var innerRadii = 40;
+		var middleRadii = 60
 		var outerRadii = 165;
+		var padding = 5;
 		var self = this;
 		var toRadians = this.toRadians;
 		this.slices.forEach(function(slice) {
 			self.drawSlice(ctx, slice.color, slice.start + rotation, slice.end + rotation, outerRadii);
 			self.drawText(canvas, (rotation + slice.start + 22.5) % 360, slice.text);
-			self.drawImage(ctx, rotation + slice.start + 22.5, slice.img);
+			//self.drawImage(ctx, rotation + slice.start + 22.5, slice.img);
 		});
 
+		//fill center with white out to middleRadii + padding
 		ctx.fillStyle = '#ffffff';
 
 		cx = self.centerX;
 		cy = self.centerY;
 		ctx.beginPath();
 		ctx.moveTo(cx, cy);
-		ctx.arc(cx, cy, innerRadii + 20, 0, Math.PI * 2);
+		ctx.arc(cx, cy, middleRadii + padding, 0, Math.PI * 2);
 		ctx.lineTo(cx, cy);
 		ctx.closePath();
 		ctx.fill(); 
 
-		self.drawInnerSlice(ctx, '#9352a0', this.slices[0].start + rotation, this.slices[1].end + rotation, innerRadii + 15);
-		self.drawInnerSlice(ctx, '#F78F33', this.slices[2].start + rotation, this.slices[4].end + rotation, innerRadii + 15);
-		self.drawInnerSlice(ctx, '#5085a0', this.slices[5].start + rotation, this.slices[7].end + 360 + rotation, innerRadii + 15);
+		//draw inner slices out to middleRadii
+		self.drawInnerSlice(ctx, '#9352a0', this.slices[0].start + rotation, this.slices[1].end + rotation, middleRadii);
+		self.drawInnerSlice(ctx, '#F78F33', this.slices[2].start + rotation, this.slices[4].end + rotation, middleRadii);
+		self.drawInnerSlice(ctx, '#5085a0', this.slices[5].start + rotation, this.slices[7].end + 360 + rotation, middleRadii);
 		
+		//fill center with white out to innerRadii + padding
 		ctx.fillStyle = '#ffffff';
 		
 		cx = self.centerX;
@@ -135,11 +140,12 @@ var dataFuturesWheel = {
 		ctx.closePath();
 		ctx.fill();  
 		 		
-		var textRadius = innerRadii + 7;
-		ctx.font = '7px Arial';
-		ctx.fillTextCircle("CHOICE",self.centerX,self.centerY,textRadius,toRadians(280+rotation), toRadians(350+rotation));
-		ctx.fillTextCircle("VALUE",self.centerX,self.centerY,textRadius,toRadians(30+rotation), toRadians(105+rotation));
-		ctx.fillTextCircle("PROTECTION",self.centerX,self.centerY,textRadius,toRadians(145+rotation), toRadians(260+rotation));
+		//draw text on paths
+		var textRadius = innerRadii + 9;
+		ctx.font = '10px Arial';
+		ctx.fillTextCircle("CHOICE",self.centerX,self.centerY,textRadius,toRadians(220+rotation), toRadians(290+rotation));
+		ctx.fillTextCircle("VALUE",self.centerX,self.centerY,textRadius,toRadians(340+rotation), toRadians(385+rotation));
+		ctx.fillTextCircle("PROTECTION",self.centerX,self.centerY,textRadius,toRadians(95+rotation), toRadians(190+rotation));
 		
 		ctx.fillStyle = '#000000';
 		
@@ -153,8 +159,8 @@ var dataFuturesWheel = {
 		ctx.fill();  
 		
 		ctx.fillStyle = '#ffffff';
-		ctx.fillText('Transparent', self.centerX - 19, self.centerY - 4);
-		ctx.fillText('Data Use', self.centerX - 14, self.centerY + 4);
+		ctx.fillText('TRANSPARENT', self.centerX - 36, self.centerY);
+		ctx.fillText('DATA USE', self.centerX - 24, self.centerY + 13);
 			
 	},
 	     

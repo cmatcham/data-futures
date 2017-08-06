@@ -99,6 +99,13 @@ body {
 				<div class="form-group">
 					<textarea id="q1answer" class="form-control" rows="3"></textarea>
 				</div>
+				<div class="form-group">
+					<label for="basic-url">If you have a web page giving more detail, add a link to it here.</label>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon3">http://</span>
+						<input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="www.example.com/privacy.html">
+					</div>  				
+				</div>
 				<div class="modal fade" id="q1help" tabindex="-1" role="dialog"
 					aria-labelledby="q1help" aria-hidden="true">
 					<div class="modal-dialog modal-lg">
@@ -543,6 +550,10 @@ function generateEmbed() {
 	json.push({'answer':localStorage.q2answer});
 	json.push({'answer':localStorage.q3answer});
 	json.push({'answer':localStorage.q4answer});
+	json.push({'answer':localStorage.q5answer});
+	json.push({'answer':localStorage.q6answer});
+	json.push({'answer':localStorage.q7answer});
+	json.push({'answer':localStorage.q8answer});
 	console.log(json);
 	var code = LZString.compressToBase64(JSON.stringify(json));
 	$('#embedCode').text(code);
